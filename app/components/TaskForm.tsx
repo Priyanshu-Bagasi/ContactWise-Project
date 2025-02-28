@@ -43,49 +43,64 @@ export default function TaskForm({ task, onCancel }: { task?: Task; onCancel?: (
     onMutate: async (newTask) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] })
       const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
-      const tempId = Date.now() // Temporary ID for optimistic update
-  
-      // Optimistically add the new task to the list
+      const tempId = Date.now()
+
       queryClient.setQueryData<Task[]>(['tasks'], (old) => [
         ...(old || []),
         { ...newTask, id: tempId }
       ])
-  
+
       return { previousTasks, tempId }
     },
     onError: (err, newTask, context) => {
-      // Rollback on error
-      queryClient.setQueryData(['tasks'], context?.previousTasks)
+      if (context?.previousTasks) {
+        queryClient.setQueryData(['tasks'], context.previousTasks)
+      }
+      return void 0 // Explicitly return void to avoid ESLint warning
     },
     onSuccess: (data, variables, context) => {
-      // Replace the temporary ID with the real ID from the API response
       queryClient.setQueryData<Task[]>(['tasks'], (old) =>
-        old?.map((task) => task.id === context?.tempId ? data : task)
+        old?.map((task) => (task.id === context?.tempId ? data : task))
       )
+      return void 0 // Explicitly return void
     }
   })
 
   const updateMutation = useMutation({
-    mutationFn: (data: FormData) => updateTask(task!.id, data),
+    mutationFn: (data: FormData) => {
+      if (!task) return Promise.reject('No task to update')
+      return updateTask(task.id, data)
+    },
     onMutate: async (updatedTask) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] })
       const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
-      
+
       queryClient.setQueryData<Task[]>(['tasks'], (old) =>
-        old?.map((t) => t.id === task?.id ? { ...t, ...updatedTask } : t)
+        old?.map((t) => (t.id === task?.id ? { ...t, ...updatedTask } : t))
       )
-      
+
       return { previousTasks }
     },
     onError: (err, updatedTask, context) => {
-      queryClient.setQueryData(['tasks'], context?.previousTasks)
+      if (context?.previousTasks) {
+        queryClient.setQueryData(['tasks'], context.previousTasks)
+      }
+      return void 0 // Explicitly return void
     }
   })
 
   const onSubmit = (data: FormData) => {
-    task ? updateMutation.mutate(data) : createMutation.mutate(data)
+    if (task) {
+      updateMutation.mutate(data)
+    } else {
+      createMutation.mutate(data)
+    }
+
     reset()
-    if (task) onCancel?.()
+
+    if (task && onCancel) {
+      onCancel()
+    }
   }
 
   return (
