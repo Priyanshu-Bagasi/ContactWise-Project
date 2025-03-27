@@ -67,6 +67,7 @@ mutationFn: async (updatedPost) => {
   if (post.id <= 100) { /* API call */ }
   else { /* Local update */ }
 }
+```
 
 ### 2. Form Validation
 
@@ -78,6 +79,7 @@ const schema = z.object({
   title: z.string().min(1),
   body: z.string().min(10)
 });
+```
 
 ### 3. UI Automatically Refreshing After Editing/Creating
 
@@ -95,5 +97,6 @@ onSuccess: (data) => {
     old?.map((p) => (p.id === post.id ? { ...p, ...data } : p))
   );
 }
+```
 
 ## Developed by Priyanshu Bagasi ##
