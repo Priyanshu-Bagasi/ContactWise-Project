@@ -61,7 +61,7 @@ Challenge: Since JSONPlaceholder is a mock API, when we create, update, or delet
 
 Solution: Applied React Query's optimistic updates to update the UI immediately
 
-``sh
+```sh
 mutationFn: async (updatedPost) => {
   if (post.id <= 100) { /* API call */ }
   else { /* Local update */ }
@@ -95,4 +95,4 @@ onSuccess: (data) => {
   );
 }
 
-###Developed by Priyanshu Bagasi###
+Developed by Priyanshu Bagasi
