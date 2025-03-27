@@ -10,6 +10,9 @@
 
 A full-stack CRUD (Create, Read, Update, Delete) application built with Next.js, styled with TailwindCSS and DaisyUI, and integrated with JSONPlaceholder API. Features real-time data management, form validation, and responsive design.
 
+![image](https://github.com/user-attachments/assets/a21390bb-b891-4e63-8f4f-41e962853198)
+
+
 
 
 ## Features
