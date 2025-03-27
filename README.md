@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## **CRUD Application with Next.js, TailwindCSS, and DaisyUI**
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React Query](https://img.shields.io/badge/React%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
+![JSONPlaceholder](https://img.shields.io/badge/JSONPlaceholder-808080?style=for-the-badge)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![DaisyUI](https://img.shields.io/badge/DaisyUI-701a75?style=for-the-badge)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 
-First, run the development server:
+A full-stack CRUD (Create, Read, Update, Delete) application built with Next.js, styled with TailwindCSS and DaisyUI, and integrated with JSONPlaceholder API. Features real-time data management, form validation, and responsive design.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
+- **CRUD Operations**: Create, read, update, and delete posts.
+- **Optimistic UI Updates**: Instant UI changes with rollback on errors.
+- **Form Validation**: Built with React Hook Form and Zod.
+- **Responsive Design**: Mobile and Desktop responsive layout using DaisyUI components.
+- **Toasts**: Success notifications for user actions.
+- **API Integration**: Uses JSONPlaceholder for simulated backend.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Technologies
 
-To learn more about Next.js, take a look at the following resources:
+| Category         | Technology                  |
+|-----------------|----------------------------|
+| **Frontend**     | Next.js (App Router), TailwindCSS, DaisyUI |
+| **State Management** | React Query |
+| **Form Handling** | React Hook Form, Zod |
+| **Scripting Language** | JavaScript/TypeScript |
+| **API** | JSONPlaceholder |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Setup and Run Locally
 
-## Deploy on Vercel
+### Prerequisites
+- Node.js ≥18.x
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Installation
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/Priyanshu-Bagasi/ContactWise-Project.git
+   cd ContactWise-Project
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Install dependencies:
+   ```sh
+   npm install @tanstack/react-query @tanstack/react-query-devtools daisyui react-hook-form @hookform/resolvers zod
+
+3. Start the development server:
+   ```sh
+   npm run dev
+
+4. Open http://localhost:3000 in your browser.
+
+## Challenges Faced and their Solutions
+
+### 1. Changes in API not persisting
+
+Challenge: Since JSONPlaceholder is a mock API, when we create, update, or delete data, it returns a success response, but the changes aren't actually saved, and hence were not reflected in the app.
+
+Solution: Applied React Query's optimistic updates to update the UI immediately
+
+```ts
+mutationFn: async (updatedPost) => {
+  if (post.id <= 100) { /* API call */ }
+  else { /* Local update */ }
+}
+
+### 2. Form Validation
+
+Challenge: Complex validation requirements.
+Solution: Integrated Zod with React Hook Form:
+
+```ts
+const schema = z.object({
+  title: z.string().min(1),
+  body: z.string().min(10)
+});
+
+### 3. UI Automatically Refreshing After Editing/Creating
+
+Challenge: UI briefly resets before updating.
+
+Solution:
+
+*Removed automatic refetching (onSettled) in React Query.
+*Used optimistic updates for instant UI changes.
+*Manually updated cache in onSuccess.
+
+```ts
+onSuccess: (data) => {
+  queryClient.setQueryData<Post[]>(["posts"], (old) =>
+    old?.map((p) => (p.id === post.id ? { ...p, ...data } : p))
+  );
+}
+
+Developed by Priyanshu Bagasi
