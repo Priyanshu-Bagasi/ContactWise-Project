@@ -1,4 +1,5 @@
-## *CRUD Application with Next.js, TailwindCSS, and DaisyUI*
+## **CRUD Application with Next.js, TailwindCSS, and DaisyUI**
+
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![React Query](https://img.shields.io/badge/React%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
@@ -61,7 +62,7 @@ Challenge: Since JSONPlaceholder is a mock API, when we create, update, or delet
 
 Solution: Applied React Query's optimistic updates to update the UI immediately
 
-```sh
+```ts
 mutationFn: async (updatedPost) => {
   if (post.id <= 100) { /* API call */ }
   else { /* Local update */ }
@@ -72,7 +73,7 @@ mutationFn: async (updatedPost) => {
 Challenge: Complex validation requirements.
 Solution: Integrated Zod with React Hook Form:
 
-```sh
+```ts
 const schema = z.object({
   title: z.string().min(1),
   body: z.string().min(10)
@@ -88,11 +89,11 @@ Solution:
 *Used optimistic updates for instant UI changes.
 *Manually updated cache in onSuccess.
 
-```sh
+```ts
 onSuccess: (data) => {
   queryClient.setQueryData<Post[]>(["posts"], (old) =>
     old?.map((p) => (p.id === post.id ? { ...p, ...data } : p))
   );
 }
 
-Developed by Priyanshu Bagasi
+## Developed by Priyanshu Bagasi ##
